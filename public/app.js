@@ -1,6 +1,7 @@
 "use strict";
 
-const STORAGE_KEY = "nixie-live-sheet-basic-v1";
+const STORAGE_KEY = "nixie-live-sheet-basic-v1-portraits";
+const BUILTIN_AVATARS = { mage: "assets/nixie-mage-form.png", idol: "assets/nixie-idol-form.png" };
 
 function uid() {
   return `nixie-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -290,7 +291,7 @@ function updateFormPresentation() {
 }
 
 function updateAvatar() {
-  const src = state.avatars[state.form];
+  const src = state.avatars[state.form] || BUILTIN_AVATARS[state.form];
   const image = $("#activeAvatar");
   const fallback = $("#avatarFallback");
   if (src) {
@@ -758,6 +759,7 @@ function initializeEvents() {
   $("#clearAvatarsBtn").addEventListener("click", () => {
     state.avatars = { mage: "", idol: "" };
     updateAvatar();
+    addLog("Avatars", "Custom avatars cleared. Reverted to the bundled Mage and Idol portraits.");
     saveState();
   });
 
