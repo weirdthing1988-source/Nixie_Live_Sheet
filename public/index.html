@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#171229" />
-  <title>Nixie Live Character Sheet</title>
+  <title>Nixie Parallel-Class Character Sheet</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-form="mage">
@@ -12,17 +12,13 @@
 
   <header class="app-header">
     <div>
-      <p class="eyebrow">Standard D&amp;D Live Sheet</p>
+      <p class="eyebrow">Parallel-Class D&amp;D Live Sheet</p>
       <h1>Nixella “Nixie” Null</h1>
-      <p id="characterSubtitle">Level 5 Changeling Bard · Mage Form</p>
+      <p id="characterSubtitle">Level 5 Changeling · Bard Active · Mage Form</p>
     </div>
-
     <div class="header-actions">
       <button class="secondary" id="exportBtn" type="button">Export</button>
-      <label class="file-button secondary">
-        Import
-        <input id="importInput" type="file" accept="application/json" />
-      </label>
+      <label class="file-button secondary">Import<input id="importInput" type="file" accept="application/json" /></label>
       <button class="secondary danger" id="resetBtn" type="button">Reset</button>
     </div>
   </header>
@@ -30,47 +26,45 @@
   <nav class="tab-bar" aria-label="Character sheet tabs">
     <button class="tab-button active" data-tab="stats" type="button">1 · Base Stats</button>
     <button class="tab-button" data-tab="attributes" type="button">2 · Attributes &amp; Skills</button>
-    <button class="tab-button" data-tab="spells" type="button">3 · Spells</button>
+    <button class="tab-button" data-tab="spells" type="button">3 · Spells &amp; Moves</button>
     <button class="tab-button" data-tab="inventory" type="button">4 · Inventory</button>
+    <button class="tab-button" data-tab="personality" type="button">5 · Personality</button>
   </nav>
 
   <main>
-    <section class="tab-panel active" id="tab-stats" aria-labelledby="stats-tab">
+    <section class="tab-panel active" id="tab-stats">
       <div class="hero-grid">
         <article class="card identity-card">
           <div class="avatar-frame">
-            <img id="activeAvatar" alt="Nixie avatar" hidden />
-            <div id="avatarFallback" class="avatar-fallback">NN</div>
+            <img id="activeAvatar" alt="Nixie avatar" />
+            <div id="avatarFallback" class="avatar-fallback" hidden>NN</div>
             <span class="form-badge" id="formBadge">Mage Form</span>
           </div>
-
           <div class="identity-copy">
-            <label>
-              Character name
-              <input id="characterName" value="Nixella &quot;Nixie&quot; Null" />
-            </label>
-            <div class="mini-grid">
-              <label>Class &amp; level<input id="classLevel" value="Bard 5" /></label>
+            <label>Character name<input id="characterName" value="Nixella &quot;Nixie&quot; Null" /></label>
+            <div class="identity-grid">
+              <label>Level<input id="characterLevel" type="number" min="1" max="20" value="5" /></label>
+              <label>Active class<input id="activeClass" value="Bard" readonly /></label>
               <label>Species<input id="species" value="Changeling" /></label>
             </div>
-            <p class="muted">The transformation changes Nixie’s presentation, Performance spells, and Banhammer form. Her standard D&amp;D statistics remain intact.</p>
+            <div class="parallel-class-row" aria-label="Parallel classes">
+              <span id="bardClassChip" class="class-chip active">Bard · Level 5</span>
+              <span id="idolClassChip" class="class-chip">Idol · Level 5</span>
+            </div>
+            <p class="muted">Go Live swaps Nixie between parallel classes. HP, level, attributes, proficiency, spell slots and inventory are shared; class features, available magic and Banhammer form change.</p>
           </div>
         </article>
 
         <article class="card go-live-card">
           <div>
-            <p class="eyebrow">Transformation</p>
+            <p class="eyebrow">Parallel-Class Transformation</p>
             <h2 id="liveHeading">Ready Backstage</h2>
-            <p id="liveDescription">Nixie is in her normal mage form.</p>
+            <p id="liveDescription">Bard is active. Mage spells and the dormant Banhammer are available.</p>
           </div>
-
           <label class="live-switch">
             <input id="goLiveToggle" type="checkbox" />
             <span class="switch-track"><span class="switch-knob"></span></span>
-            <span class="switch-copy">
-              <strong>GO LIVE</strong>
-              <small id="switchStatus">OFF</small>
-            </span>
+            <span class="switch-copy"><strong>GO LIVE</strong><small id="switchStatus">OFF</small></span>
           </label>
         </article>
       </div>
@@ -80,7 +74,7 @@
         <label class="stat-box">Initiative<input id="initiative" value="+0" /></label>
         <label class="stat-box">Speed<input id="speed" value="30 ft." /></label>
         <label class="stat-box">Proficiency<input id="proficiency" value="+3" /></label>
-        <label class="stat-box">Spell Save DC<input id="spellSaveDc" type="number" value="16" /></label>
+        <label class="stat-box">Save DC<input id="spellSaveDc" type="number" value="16" /></label>
         <label class="stat-box">Spell Attack<input id="spellAttack" value="+8" /></label>
       </div>
 
@@ -103,25 +97,20 @@
           <label>Temporary HP<input id="tempHp" type="number" value="0" min="0" /></label>
         </article>
 
-        <article class="card inspiration-card">
+        <article class="card class-feature-card">
           <div class="card-heading">
-            <div><p class="eyebrow">Bard Feature</p><h2>Bardic Inspiration</h2></div>
+            <div><p class="eyebrow" id="classFeatureEyebrow">Bard Feature</p><h2 id="classFeatureHeading">Bardic Inspiration</h2></div>
             <button class="secondary small" id="shortRestBtn" type="button">Short Rest</button>
           </div>
-          <p>Five d8 uses, restored on a short or long rest.</p>
-          <div class="pip-row" id="inspirationPips" aria-label="Bardic Inspiration uses"></div>
-          <button id="rollInspirationBtn" type="button">Roll Inspiration d8</button>
+          <div id="classFeatureBody"></div>
         </article>
 
         <article class="card banhammer-card featured">
           <div class="card-heading">
-            <div>
-              <p class="eyebrow">Signature Weapon</p>
-              <h2>Banhammer</h2>
-            </div>
-            <span class="status-chip" id="banhammerFormChip">Normal Club</span>
+            <div><p class="eyebrow">Signature Weapon</p><h2>Banhammer</h2></div>
+            <span class="status-chip" id="banhammerFormChip">Dormant Club</span>
           </div>
-          <p id="banhammerSummary">A normal club while Nixie is in Mage form.</p>
+          <p id="banhammerSummary">The fist is folded shut, leaving the Banhammer as a normal club.</p>
           <dl class="weapon-stats">
             <div><dt>Attack</dt><dd id="banhammerAttackDisplay">+4</dd></div>
             <div><dt>Damage</dt><dd id="banhammerDamageDisplay">1d4+1 Bludgeoning</dd></div>
@@ -135,17 +124,14 @@
 
         <article class="card spell-roller-card">
           <div class="card-heading">
-            <div><p class="eyebrow">Quick Cast</p><h2>Spell Roller</h2></div>
-            <span class="status-chip" id="performanceStatus">Base Spellbook</span>
+            <div><p class="eyebrow">Quick Action</p><h2 id="quickActionHeading">Mage Spell Roller</h2></div>
+            <span class="status-chip" id="activeBookStatus">Bard Spellbook</span>
           </div>
-          <label>
-            Spell
-            <select id="quickSpellSelect"></select>
-          </label>
+          <label>Spell or move<select id="quickSpellSelect"></select></label>
           <div id="quickSpellDetails" class="spell-details"></div>
           <div class="button-row">
-            <button id="quickSpellRollBtn" type="button">Roll Spell</button>
-            <button id="quickSpellSlotBtn" class="secondary" type="button">Cast / Use Slot</button>
+            <button id="quickSpellRollBtn" type="button">Roll / Use</button>
+            <button id="quickSpellSlotBtn" class="secondary" type="button">Use Slot</button>
           </div>
         </article>
       </div>
@@ -161,10 +147,9 @@
 
     <section class="tab-panel" id="tab-attributes">
       <div class="section-heading">
-        <div><p class="eyebrow">Standard D&amp;D</p><h2>Attributes &amp; Skills</h2></div>
-        <p>Click any modifier to make a d20 roll. Advantage and disadvantage apply to all checks until changed.</p>
+        <div><p class="eyebrow">Shared Statistics</p><h2>Attributes &amp; Skills</h2></div>
+        <p>These values remain the same in Bard and Idol classes. Select a roll mode, then click any modifier.</p>
       </div>
-
       <article class="card roll-mode-card">
         <span>Roll mode</span>
         <div class="segmented" role="group" aria-label="Roll mode">
@@ -173,15 +158,9 @@
           <button data-roll-mode="advantage" type="button">Advantage</button>
         </div>
       </article>
-
       <div class="attribute-grid" id="attributeGrid"></div>
-
       <div class="skills-layout">
-        <article class="card">
-          <div class="card-heading"><div><p class="eyebrow">Checks</p><h2>Skills</h2></div></div>
-          <div class="skill-list" id="skillList"></div>
-        </article>
-
+        <article class="card"><div class="card-heading"><div><p class="eyebrow">Checks</p><h2>Skills</h2></div></div><div class="skill-list" id="skillList"></div></article>
         <div class="side-stack">
           <article class="card">
             <div class="card-heading"><div><p class="eyebrow">Awareness</p><h2>Passives</h2></div></div>
@@ -189,7 +168,6 @@
             <label>Passive Insight<input id="passiveInsight" type="number" value="11" /></label>
             <label>Passive Investigation<input id="passiveInvestigation" type="number" value="12" /></label>
           </article>
-
           <article class="card">
             <div class="card-heading"><div><p class="eyebrow">Training</p><h2>Proficiencies</h2></div></div>
             <textarea id="proficienciesText" rows="12">Armor: Light Armor
@@ -203,128 +181,115 @@ Languages: Common, Draconic, Elvish, Goblin</textarea>
 
     <section class="tab-panel" id="tab-spells">
       <div class="section-heading">
-        <div><p class="eyebrow">Spellcasting</p><h2>Base &amp; Performance Spells</h2></div>
-        <button id="addPerformanceSpellBtn" type="button">Add Performance Spell</button>
+        <div><p class="eyebrow">Parallel Spellcasting</p><h2 id="spellbookHeading">Bard · Mage Spellbook</h2></div>
+        <div class="section-actions"><span class="status-chip" id="spellbookFormChip">Mage Form</span><button id="addPerformanceSpellBtn" type="button">Add Custom Idol Move</button></div>
       </div>
-
+      <p class="mode-explainer" id="spellbookExplainer">Mage-only spells are available. Idol Performance Moves are unavailable until Go Live.</p>
       <div class="slot-row" id="spellSlotRow"></div>
 
-      <div class="spell-section">
-        <div class="subheading">
-          <div><h3>Base Spells</h3><p>Available in Mage and Idol forms.</p></div>
-        </div>
-        <div class="spell-grid" id="baseSpellGrid"></div>
+      <div class="spell-section" id="mageSpellSection">
+        <div class="subheading"><div><h3>Mage Spellbook</h3><p>Practical arcane magic, utility and personal defence.</p></div></div>
+        <div class="spell-grid" id="mageSpellGrid"></div>
       </div>
 
-      <div class="spell-section performance-section" id="performanceSpellSection">
-        <div class="subheading">
-          <div><h3>Performance Spells</h3><p>Unlocked while Go Live is active.</p></div>
-          <span class="status-chip" id="performanceLockChip">Locked</span>
-        </div>
-        <div class="spell-grid" id="performanceSpellGrid"></div>
+      <div class="spell-section" id="idolMoveSection" hidden>
+        <div class="subheading"><div><h3>Idol Setlist</h3><p>Idol-only Performance Moves powered by the same shared spell slots.</p></div></div>
+        <div class="spell-grid" id="idolMoveGrid"></div>
+        <div class="subheading feature-subheading"><div><h3>Idol Class Features &amp; V-Tube FX</h3><p>Features unlock at specific parallel-class levels and do not use spell slots unless stated.</p></div></div>
+        <div class="spell-grid" id="idolFeatureGrid"></div>
       </div>
     </section>
 
     <section class="tab-panel" id="tab-inventory">
-      <div class="section-heading">
-        <div><p class="eyebrow">Equipment</p><h2>Inventory</h2></div>
-        <button id="addInventoryBtn" type="button">Add Item</button>
-      </div>
-
+      <div class="section-heading"><div><p class="eyebrow">Shared Equipment</p><h2>Inventory</h2></div><button id="addInventoryBtn" type="button">Add Item</button></div>
       <article class="card inventory-banhammer">
-        <div class="card-heading">
-          <div><p class="eyebrow">Attuned Signature Item</p><h2>Banhammer Configuration</h2></div>
-          <span class="status-chip">Front-page linked</span>
-        </div>
-        <p class="muted">The Mage values are set as a normal club. The Idol values are editable draft values because the exact enhancement has not yet been defined.</p>
-
+        <div class="card-heading"><div><p class="eyebrow">Attuned Signature Item</p><h2>Banhammer Configuration</h2></div><span class="status-chip">Front-page linked</span></div>
+        <p class="muted">Mage form uses the dormant club. Go Live unfurls the fist, strengthens the weapon and adds Radiant damage.</p>
         <div class="weapon-config-grid">
           <fieldset>
-            <legend>Mage Form · Normal Club</legend>
+            <legend>Mage Form · Dormant Club</legend>
             <label>Attack bonus<input id="mageHammerAttack" value="+4" /></label>
             <label>Damage formula<input id="mageHammerDamage" value="1d4+1" /></label>
             <label>Damage label<input id="mageHammerDamageLabel" value="Bludgeoning" /></label>
             <label>Property<input id="mageHammerProperty" value="Light" /></label>
           </fieldset>
-
           <fieldset>
-            <legend>Idol Form · Empowered</legend>
-            <label>Attack bonus<input id="idolHammerAttack" value="+4" /></label>
-            <label>Weapon damage<input id="idolHammerDamage" value="1d6+1" /></label>
+            <legend>Idol Form · Unfurled Fist</legend>
+            <label>Attack bonus<input id="idolHammerAttack" value="+10" /></label>
+            <label>Weapon damage<input id="idolHammerDamage" value="1d6+2" /></label>
             <label>Radiant damage<input id="idolHammerRadiant" value="1d6" /></label>
-            <label>Property<input id="idolHammerProperty" value="Radiant Performance" /></label>
+            <label>Property<input id="idolHammerProperty" value="Empowered · Radiant" /></label>
           </fieldset>
         </div>
       </article>
-
       <div class="inventory-layout">
-        <article class="card">
-          <div class="card-heading"><div><p class="eyebrow">Carried Gear</p><h2>Items</h2></div></div>
-          <div class="inventory-list" id="inventoryList"></div>
-        </article>
-
+        <article class="card"><div class="card-heading"><div><p class="eyebrow">Carried Gear</p><h2>Items</h2></div></div><div class="inventory-list" id="inventoryList"></div></article>
         <div class="side-stack">
           <article class="card">
             <div class="card-heading"><div><p class="eyebrow">Currency</p><h2>Coins</h2></div></div>
             <div class="coin-grid">
-              <label>CP<input id="coinCp" type="number" value="0" min="0" /></label>
-              <label>SP<input id="coinSp" type="number" value="0" min="0" /></label>
-              <label>EP<input id="coinEp" type="number" value="0" min="0" /></label>
-              <label>GP<input id="coinGp" type="number" value="0" min="0" /></label>
-              <label>PP<input id="coinPp" type="number" value="0" min="0" /></label>
+              <label>CP<input id="coinCp" type="number" value="0" min="0" /></label><label>SP<input id="coinSp" type="number" value="0" min="0" /></label><label>EP<input id="coinEp" type="number" value="0" min="0" /></label><label>GP<input id="coinGp" type="number" value="0" min="0" /></label><label>PP<input id="coinPp" type="number" value="0" min="0" /></label>
             </div>
           </article>
-
           <article class="card">
-            <div class="card-heading"><div><p class="eyebrow">Appearance</p><h2>Form Avatars</h2></div></div>
+            <div class="card-heading"><div><p class="eyebrow">Front-Page Portraits</p><h2>Avatar Overrides</h2></div></div>
+            <p class="muted small-copy">The bundled square avatars are used by default. Uploads replace only the compact front-page images; the Personality tab keeps the full portraits.</p>
             <label class="upload-label">Mage avatar override<input id="mageAvatarInput" type="file" accept="image/*" /></label>
             <label class="upload-label">Idol avatar override<input id="idolAvatarInput" type="file" accept="image/*" /></label>
-            <button id="clearAvatarsBtn" class="secondary" type="button">Clear Custom Avatars</button>
+            <button id="clearAvatarsBtn" class="secondary" type="button">Restore Bundled Avatars</button>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-personality">
+      <div class="section-heading"><div><p class="eyebrow">Character</p><h2>Personality &amp; Story</h2></div><span class="status-chip">Non-combat</span></div>
+      <div class="portrait-pair">
+        <article class="card portrait-card"><div class="portrait-title"><div><p class="eyebrow">Bard Class</p><h3>Mage Form</h3></div><span class="class-chip active">Bard</span></div><img src="assets/nixie-mage-form.png" alt="Nixie in Mage form" /></article>
+        <article class="card portrait-card idol-portrait"><div class="portrait-title"><div><p class="eyebrow">Idol Class</p><h3>Idol Form</h3></div><span class="class-chip">Idol</span></div><img src="assets/nixie-idol-form.png" alt="Nixie in Idol form" /></article>
+      </div>
+      <div class="personality-grid">
+        <article class="card personal-details-card">
+          <div class="card-heading"><div><p class="eyebrow">Identity</p><h2>Personal Details</h2></div></div>
+          <div class="mini-grid"><label>Age<input id="age" type="number" value="26" /></label><label>Alignment<input id="alignment" value="Chaotic Good" /></label></div>
+          <div class="mini-grid"><label>Gender<input id="gender" value="Female" /></label><label>Height<input id="height" value="5 ft. 5 in." /></label></div>
+          <div class="mini-grid"><label>Eyes<input id="eyes" value="Amber" /></label><label>Hair<input id="hair" value="Purple or red, depending on form" /></label></div>
+          <label>Appearance<textarea id="appearance" rows="5">Nixie presents as a stylish young human mageling. Her human appearance conceals that she is a changeling. Go Live replaces her restrained purple-and-black mage look with a vivid, extravagant Idol form.</textarea></label>
+        </article>
+        <article class="card personality-notes-card">
+          <div class="card-heading"><div><p class="eyebrow">Roleplay</p><h2>Traits</h2></div></div>
+          <label>Personality traits<textarea id="personalityTraits" rows="4">Happy and joyful, becoming loud, boisterous and mischievous when performing.</textarea></label>
+          <label>Ideals<textarea id="ideals" rows="3">She wants to make people happy through song, spectacle and a well-timed Banhammer.</textarea></label>
+          <label>Bonds<textarea id="bonds" rows="3" placeholder="Add Nixie’s important relationships, promises and attachments."></textarea></label>
+          <label>Flaws<textarea id="flaws" rows="3" placeholder="Add Nixie’s weaknesses, habits and complications."></textarea></label>
+        </article>
+      </div>
+      <div class="personality-grid story-row">
+        <article class="card"><div class="card-heading"><div><p class="eyebrow">History</p><h2>Backstory</h2></div></div><textarea id="backstory" rows="14" placeholder="Write Nixie’s backstory here."></textarea></article>
+        <article class="card"><div class="card-heading"><div><p class="eyebrow">Campaign</p><h2>Additional Notes</h2></div></div><textarea id="additionalNotes" rows="14" placeholder="Allies, organisations, secrets, performance notes and campaign developments."></textarea></article>
       </div>
     </section>
   </main>
 
   <dialog id="performanceSpellDialog">
     <form method="dialog" id="performanceSpellForm">
-      <div class="dialog-heading">
-        <div><p class="eyebrow">Custom Ability</p><h2>Performance Spell</h2></div>
-        <button class="icon-button" value="cancel" aria-label="Close dialog">×</button>
-      </div>
+      <div class="dialog-heading"><div><p class="eyebrow">Custom Ability</p><h2>Add Idol Move</h2></div><button class="icon-button" value="cancel" aria-label="Close dialog">×</button></div>
       <label>Name<input id="newSpellName" required /></label>
-      <div class="mini-grid">
-        <label>Level<input id="newSpellLevel" type="number" min="0" max="9" value="1" /></label>
-        <label>Action type<input id="newSpellAction" value="Action" /></label>
-      </div>
-      <div class="mini-grid">
-        <label>Range<input id="newSpellRange" value="60 ft." /></label>
-        <label>Roll formula<input id="newSpellFormula" placeholder="e.g. 2d6+5" /></label>
-      </div>
+      <div class="mini-grid"><label>Level<input id="newSpellLevel" type="number" min="0" max="9" value="1" /></label><label>Action type<input id="newSpellAction" value="Action" /></label></div>
+      <div class="mini-grid"><label>Range<input id="newSpellRange" value="60 ft." /></label><label>Roll formula<input id="newSpellFormula" placeholder="e.g. 2d6+5" /></label></div>
+      <label>Save / check<input id="newSpellCheck" placeholder="e.g. WIS save DC 16" /></label>
       <label>Effect<textarea id="newSpellEffect" rows="4"></textarea></label>
-      <div class="dialog-actions">
-        <button class="secondary" value="cancel" type="button" id="cancelSpellDialogBtn">Cancel</button>
-        <button value="default" type="submit">Add Spell</button>
-      </div>
+      <div class="dialog-actions"><button class="secondary" value="cancel" type="button" id="cancelSpellDialogBtn">Cancel</button><button value="default" type="submit">Add Move</button></div>
     </form>
   </dialog>
 
   <dialog id="inventoryDialog">
     <form method="dialog" id="inventoryForm">
-      <div class="dialog-heading">
-        <div><p class="eyebrow">Equipment</p><h2>Add Inventory Item</h2></div>
-        <button class="icon-button" value="cancel" aria-label="Close dialog">×</button>
-      </div>
+      <div class="dialog-heading"><div><p class="eyebrow">Equipment</p><h2>Add Inventory Item</h2></div><button class="icon-button" value="cancel" aria-label="Close dialog">×</button></div>
       <label>Name<input id="newItemName" required /></label>
-      <div class="mini-grid">
-        <label>Quantity<input id="newItemQuantity" type="number" min="1" value="1" /></label>
-        <label>Weight<input id="newItemWeight" value="0 lb." /></label>
-      </div>
+      <div class="mini-grid"><label>Quantity<input id="newItemQuantity" type="number" min="1" value="1" /></label><label>Weight<input id="newItemWeight" value="0 lb." /></label></div>
       <label>Notes<textarea id="newItemNotes" rows="3"></textarea></label>
-      <div class="dialog-actions">
-        <button class="secondary" value="cancel" type="button" id="cancelInventoryDialogBtn">Cancel</button>
-        <button value="default" type="submit">Add Item</button>
-      </div>
+      <div class="dialog-actions"><button class="secondary" value="cancel" type="button" id="cancelInventoryDialogBtn">Cancel</button><button value="default" type="submit">Add Item</button></div>
     </form>
   </dialog>
 
