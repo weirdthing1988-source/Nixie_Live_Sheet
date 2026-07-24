@@ -1,49 +1,56 @@
-# Nixie Live Character Sheet — Cloudflare-ready basic version
+# Nixie Parallel-Class Character Sheet v2
 
-A dependency-free, four-tab browser character sheet for Nixella “Nixie” Null.
+A dependency-free browser character sheet for Nixella “Nixie” Null.
 
-## Project layout
+Nixie has one shared character level and two parallel classes:
 
-- `public/` — the static website Cloudflare Pages publishes.
-- `wrangler.toml` — tells Wrangler this is a Pages project and that `public/` is the output directory.
-- `package.json` — provides Pages-compatible development and deployment commands.
+- **Mage Form — Bard:** practical arcane spells, Bardic Inspiration and the dormant Banhammer.
+- **Idol Form — Idol:** Performance Moves, Encore, V-Tube FX and the empowered Radiant Banhammer.
 
-## Cloudflare Pages with GitHub (recommended)
+Go Live changes the active class. HP, attributes, proficiency, spell slots, equipment and level remain shared.
 
-Create or edit a **Pages** project using these settings:
+## Included tabs
 
-- Framework preset: None
-- Production branch: main
-- Build command: leave blank (or use `exit 0`)
+1. **Base Stats** — compact Mage/Idol avatars, separate Level field, active parallel class, Go Live, HP, class features, Banhammer and quick actions.
+2. **Attributes & Skills** — standard D&D ability checks, saving throws, skills, passives and proficiencies.
+3. **Spells & Moves** — dynamically swaps between the Mage spellbook and Idol setlist; includes shared spell-slot tracking and level-locked V-Tube FX.
+4. **Inventory** — equipment, currency and editable Banhammer values.
+5. **Personality** — both full portraits, personal details, traits, ideals, bonds, flaws, backstory and campaign notes.
+
+## Built-in rules data
+
+### Mage spellbook
+
+Mage Hand, Disguise Self, Magic Missile, Shield, Detect Magic and Locate Object.
+
+### Idol Performance Moves
+
+Spotlight, Superchat, Get Hyped!, Winky Heart, Stage Fog, Dubstep, Echoing Illusion, Crowd Surf and Radiant Laser.
+
+### Idol features
+
+Encore; V-Tube FX: 2D Mode at level 2; Chibi Mode at level 5; Scene Transition at level 8; Technical Difficulties at level 11.
+
+## Cloudflare Pages with GitHub
+
+Create or edit a **Pages** project and use:
+
+- Framework preset: `None`
+- Production branch: `main`
+- Build command: leave blank, or use `exit 0`
 - Build output directory: `public`
-- Root directory: leave blank when these files are at the repository root
+- Root directory: leave blank when these files are in the repository root
+- Deploy command: leave blank
 
-Do not set the deploy command to `npx wrangler deploy`; that command is for Workers.
+Do not use `npx wrangler deploy` for a Pages Git deployment.
 
-## If the repository is connected through Workers Builds
-
-Set:
-
-- Build command: leave blank
-- Deploy command: `npm run deploy`
-
-This runs `wrangler pages deploy public --project-name=nixie-live-sheet`.
-If your Cloudflare Pages project uses a different project name, change the project name in `package.json`.
-
-## Run locally
+## Local use
 
 ```bash
 npm install
 npm run dev
 ```
 
-Or serve `public/` with any static web server.
+You can also serve the `public/` folder using any static web server.
 
-## Included
-
-1. Base Stats with Go Live form switch, Bardic Inspiration, quick spell controls and front-page Banhammer rollers.
-2. Attributes and Skills with standard D&D checks and saves.
-3. Base and Performance spell sections with spell-slot tracking.
-4. Inventory, avatar uploads and editable Mage/Idol Banhammer settings.
-
-Changes are stored in browser local storage and can be backed up through JSON export/import.
+The sheet saves locally in the browser and supports JSON export/import. Compact avatar uploads override the bundled square avatars; the full portraits on the Personality tab remain bundled assets.
